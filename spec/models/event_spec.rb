@@ -34,7 +34,7 @@ RSpec.describe Event, type: :model do
   		end
 
   		it 'returns false when type is longer than 50 characters' do
-  			event = build :event, type: 'a' * 51
+  			event = build :event, event_type: 'a' * 51
   			expect(event).not_to be_valid
   		end
   	end
@@ -72,7 +72,7 @@ RSpec.describe Event, type: :model do
   		end
 
   		it 'returns true when type is not longer than 50 characters' do
-  			event = build :event, type: 'a' * 50
+  			event = build :event, event_type: 'a' * 50
   			expect(event).to be_valid
   		end
   	end
