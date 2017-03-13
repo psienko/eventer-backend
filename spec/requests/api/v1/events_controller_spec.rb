@@ -160,5 +160,45 @@ RSpec.describe 'Events API/V1', type: :request do
       end
     end
 
+    context 'when event does not exist' do
+      before do
+        put '/api/v1/events/0', params: event_valid_attrs
+      end
+
+      it 'responds with 404 HTTP status code' do
+        expect(response).to have_http_status(404)
+      end
+    end
+  end
+
+  describe 'DELETE /events/:id' do
+    let!(:event) { create :event }
+
+    context 'when successfully removed' do
+      it 'removes event' do
+        expect do
+          event
+          delete '/api/v1/events/' + event.id.to_s
+        end.to change { Event.count }.by(-1)
+      end
+
+      it 'responds with 204 HTTP status' do
+        delete '/api/v1/events/' + event.id.to_s
+        expect(response).to have_http_status(204)
+      end
+    end
+
+    context 'when unsuccessfully removed due to unexisted event' do
+      it 'responds with 404' do
+        delete '/api/v1/events/0'
+        expect(response).to have_http_status(404)
+      end
+
+      it 'does not remove event' do
+        expect do
+          delete '/api/v1/events/0'
+        end.to change { Event.count }.by(0)
+      end
+    end
   end
 end

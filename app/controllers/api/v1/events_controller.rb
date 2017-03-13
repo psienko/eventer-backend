@@ -1,7 +1,7 @@
 module Api
   module V1
     class EventsController < ApiController
-      before_action :set_event, only: [:show, :update]
+      before_action :set_event, only: [:show, :update, :destroy]
 
       def index
         @events = Event.all
@@ -21,6 +21,15 @@ module Api
       def update
         status = @event.update(event_params) ? :ok : :unprocessable_entity
         render json: @event, status: status
+      end
+
+      def destroy
+        @event.destroy
+        if @event.destroyed?
+          head :no_content
+        else
+          render json: @event, status: :unprocessable_entity
+        end
       end
 
       private
